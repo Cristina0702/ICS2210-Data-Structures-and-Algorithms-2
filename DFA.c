@@ -2,18 +2,17 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-typedef struct states states_t;
-typedef states_t *states_ptr;
+#define MAX_STATES 64
 
 typedef struct states{
     char state;
     int a; //outgoing transition 
     int b; //outgoing transition
     bool accepting; // = false;
-}*states_ptr;
+} states_ptr;
 
 typedef struct dfa{
-    states_ptr *states; //= {0}; //K  //size n
+    states_ptr *states[MAX_STATES]; //= {0}; //K  //size n
     char *alphabet; //= {0}; //T
     //char *transitions;
     int initial;
