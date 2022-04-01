@@ -4,11 +4,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-states_ptr *create_states(int n, int i)
-{
-    dfa_ptr *dfa;
+states_ptr *create_states(dfa_ptr *dfa, int n, int i){
 
-    states_ptr *new_state = (states_ptr*)malloc(sizeof(states_ptr));
+    states_ptr *new_state = (states_ptr*)malloc(sizeof(states_ptr)*(n+1));
     new_state->content = i;
     new_state->accepting = flip_coin();
 
@@ -43,11 +41,11 @@ dfa_ptr* init(int n){
         //if n is between 16 and 64
         dfa_ptr *dfa = (dfa_ptr*)malloc(sizeof(dfa_ptr));
         dfa->count = 0;
-        dfa->initial = -1;
-        dfa->current = -1;
+        dfa->initial = rand() % n; //selecting a random state
+        //dfa->current = -1;
 
         for(int i=0; i<n; i ++){
-            dfa->states[i] = create_states(n, i);
+            dfa->states[i] = create_states(dfa, n, i);
         }
 
         return dfa;
@@ -56,9 +54,19 @@ dfa_ptr* init(int n){
     }
 }
 
-void reset(dfa_ptr *dfa)
-{
-	dfa->current = dfa->initial;
+void destroy(dfa_ptr *dfa, int n){
+    if (dfa != NULL){
+        //to remove the memory allocations
+        for (int i = 0; i < n; i++){
+            if(dfa->states[i] != NULL){
+                free(dfa->states[i]);
+                dfa->states[i] = NULL;
+            }
+        }
+        free(dfa->states);
+        free(dfa);
+        dfa = NULL;
+    }
 }
 
 void main(){
